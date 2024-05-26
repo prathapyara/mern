@@ -112,7 +112,7 @@ export const ProductListPageComponent = ({ getProducts, categories }) => {
                 </Col>
                 <Col sm={9}>
                     {
-                        products.map((product, _idx) => {
+                       products.length>0 ? products.map((product, _idx) => {
                             return (
                                 <ProductForListComponent
                                     images={product.images}
@@ -124,7 +124,7 @@ export const ProductListPageComponent = ({ getProducts, categories }) => {
                                     productId={product._id}
                                 />
                             )
-                        })
+                        }):<div style={{color:"red",fontSize:"25px"}}><b>No products found as per your filter conditions....!</b></div>
                     }
                     <PaginationComponent totalPages={totalPages} pageNum={pageNum} searchQuery={searchQuery} categoryName={categoryName}/>
                 </Col>
