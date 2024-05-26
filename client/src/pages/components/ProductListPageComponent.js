@@ -64,12 +64,13 @@ export const ProductListPageComponent = ({ getProducts, categories }) => {
             rating: filterRating,
             category: filterCategory,
         });
-        
+        window.scrollTo(0,0) 
     }
 
     const resetFilterHandler = () => {
         setResetFilter(false);
         setFilters({});
+        window.location.reload();
     }
 
     useEffect(() => {
@@ -81,7 +82,6 @@ export const ProductListPageComponent = ({ getProducts, categories }) => {
                 if (value) {
                     categories.map((category) => {
                         if (category.name === checkedCategory) {
-                            
                             setCategoryAttrs((item) => {
                                 return [...item,...category.attrs]
                             })
