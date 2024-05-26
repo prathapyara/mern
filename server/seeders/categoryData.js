@@ -1,0 +1,62 @@
+export const categoryData=[
+    {
+        name:"Tables",
+        description:"Product one is one of the most important thing in the selected list of items0",
+        image:"https://source.unsplash.com/random/900×700/?",
+        attrs:[
+            {
+                key:"color",
+                value:["red","blue","green","yellow"]
+            },
+            {
+                key:"memory",
+                value:["1TB","2TB","3TB"]
+            }
+        ]
+    },
+    {
+        name:"Computers",
+        description:"Product two is one of the most important thing in the selected list of items0",
+        image:"https://source.unsplash.com/random/900×700/?",
+        attrs:[
+            {
+                key:"color",
+                value:["red","blue","green","yellow"]
+            },
+            {
+                key:"memory",
+                value:["1TB","2TB","3TB"]
+            }
+        ]
+    },
+    {
+        name:"Monitors",
+        description:"Product three is one of the most important thing in the selected list of items0",
+        image:"https://source.unsplash.com/random/900×700/?",
+        attrs:[
+            {
+                key:"color",
+                value:["red","blue","green","yellow"]
+            },
+            {
+                key:"memory",
+                value:["1TB","2TB","3TB"]
+            }
+        ]
+    },
+    {
+        name:"Fruits",
+        description:"Product four is one of the most important thing in the selected list of items0",
+        image:"https://source.unsplash.com/random/900×700/?",
+        attrs:[
+            {
+                key:"color",
+                value:["red","blue","green","yellow"]
+            },
+            {
+                key:"memory",
+                value:["1TB","2TB","3TB"]
+            }
+        ]
+    },
+]
