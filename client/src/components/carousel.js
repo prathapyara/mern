@@ -11,14 +11,14 @@ export const Carousel = ({bestsellerProducts}) => {
                 </div>
                 <div className="carousel-inner">
                     <div className="carousel-item active">
-                        <img src="https://source.unsplash.com/random/900×700/?book" className="d-block w-100 carousell" alt="hi" />
+                        <img src="/images/books.png" className="d-block w-100 carousell" alt="hi" />
                         <div className="carousel-caption d-none d-md-block text-black">
                             <h5 style={{color:"red"}}>First slide label</h5>
                             <p  style={{color:"red"}}> Some representative placeholder content for the first slide.</p>
                         </div>
                     </div>
                     <div className="carousel-item ">
-                        <img src="https://source.unsplash.com/random/900×700/?camera" className="d-block w-100 carousell" alt="hi" />
+                        <img src="/images/camers.png" style={{  "object-fit": "cover" }} className="d-block w-100 carousell" alt="hi" />
                         <div className="carousel-caption d-none d-md-block text-black">
                             <h5  style={{color:"red"}}>Second slide label</h5>
                             <p  style={{color:"red"}}>Some representative placeholder content for the second slide.</p>

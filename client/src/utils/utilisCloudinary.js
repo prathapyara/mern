@@ -28,4 +28,4 @@ export const uploadImagesCloudinaryApiRequest = (images, productId) => {
             }
         })
     }
-}
+} 
