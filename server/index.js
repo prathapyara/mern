@@ -11,7 +11,7 @@ import cors from "cors";
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3000', // Allow requests from this origin
+    origin: process.env.NODE_ENV === "production" ? "https://client-o608.onrender.com" : "http://localhost:3000", // Allow requests from this origin
     methods: ['GET', 'POST'], // Allow specific methods
     allowedHeaders: ['Content-Type'], // Allow specific headers
     credentials: true // Allow credentials (cookies, authorization headers, etc.)
@@ -28,7 +28,7 @@ const httpServer = createServer(app);
 // Configure CORS for Socket.IO
 const io = new Server(httpServer, {
     cors: {
-        origin: 'http://localhost:3000', // Allow requests from this origin
+        origin: process.env.NODE_ENV === "production" ? "https://client-o608.onrender.com" : "http://localhost:3000", // Allow requests from this origin
         methods: ['GET', 'POST'], // Allow specific methods
         allowedHeaders: ['Content-Type'], // Allow specific headers
         credentials: true // Allow credentials (cookies, authorization headers, etc.)
@@ -36,11 +36,10 @@ const io = new Server(httpServer, {
 });
 
 const admin = [];
-const activeChats=[];
+const activeChats = [];
 
-const getRandomActiveAdmin=(admin)=>{
-    console.log(admin[Math.floor(Math.random()*admin.length)])
-    return admin[Math.floor(Math.random()*admin.length)].id;
+const getRandomActiveAdmin = (admin) => {
+    return admin[Math.floor(Math.random() * admin.length)].id;
 }
 
 //activeChats will store client side ids and server side socket ids to a particlular conversation
@@ -57,37 +56,34 @@ io.on("connection", (socket) => {
         if (admin.length === 0) {
             socket.emit("no admin is logged in", "No admin currently");
         } else {
-            const client=activeChats.find((item)=>item.clientId===socket.id);
+            const client = activeChats.find((item) => item.clientId === socket.id);
             let targetAdminId;
-            if(client){
-                targetAdminId=client.adminId;
-                console.log(targetAdminId);
-                
-            }else{
-                
-                targetAdminId=getRandomActiveAdmin(admin);
-                console.log(targetAdminId);
-                activeChats.push({clientId:socket.id,adminId:targetAdminId});
-                
+            if (client) {
+                targetAdminId = client.adminId;
+            } else {
+
+                targetAdminId = getRandomActiveAdmin(admin);
+                activeChats.push({ clientId: socket.id, adminId: targetAdminId });
+
             }
             socket.broadcast.to(targetAdminId).emit("message sent from client to admin", {
                 message: msg,
-                user:socket.id
+                user: socket.id
             })
         }
 
     })
 
-    socket.on("admin reply to client", ({user,replyMessage}) => {
-        
+    socket.on("admin reply to client", ({ user, replyMessage }) => {
+
         socket.broadcast.to(user).emit("message sent from admin to client", {
             message: replyMessage
         })
     })
 
-    socket.on("admin closes the chat",(socketId)=>{
-       
-        socket.broadcast.to(socketId).emit("admin closed the chat","chat closed by admin!!")
+    socket.on("admin closes the chat", (socketId) => {
+
+        socket.broadcast.to(socketId).emit("admin closed the chat", "chat closed by admin!!")
     })
 
     socket.on("disconnect", (reason) => {
@@ -96,13 +92,13 @@ io.on("connection", (socket) => {
         if (adminIndex !== -1) {
             admin.slice(adminIndex, 1);
         }
-        activeChats.filter((item)=>item.adminId!=socket.id);
+        activeChats.filter((item) => item.adminId != socket.id);
 
-        const clientIndex=activeChats.find((item)=>item.clientId===socket.id)
-        if(clientIndex!==-1){
-            activeChats.slice(clientIndex,1);
+        const clientIndex = activeChats.find((item) => item.clientId === socket.id)
+        if (clientIndex !== -1) {
+            activeChats.slice(clientIndex, 1);
         }
-        socket.broadcast.emit("disconnected",{reason:reason,socketId:socket.id})
+        socket.broadcast.emit("disconnected", { reason: reason, socketId: socket.id })
     });
 });
 

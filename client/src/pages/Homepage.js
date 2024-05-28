@@ -5,6 +5,7 @@ import axios from "axios";
 export const HomePage = () => {
 
     const bestseller=async()=>{
+       
         const {data}=await axios.get("/api/products/bestsellers");
         return data;
     }

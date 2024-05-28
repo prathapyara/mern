@@ -23,7 +23,7 @@ export const HeaderComponent = () => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { chatRooms,messageReceivedFromClient } = useSelector((state) => state.chatBetweenClientAdmin)
+  const { chatRooms, messageReceivedFromClient } = useSelector((state) => state.chatBetweenClientAdmin)
 
   const { userInfo } = useSelector((state) => state.user);
   const { itemsCount } = useSelector((state) => state.cart);
@@ -60,15 +60,19 @@ export const HeaderComponent = () => {
 
   useEffect(() => {
     if (userInfo.isAdmin) {
-      const socket = io("https://server-x05s.onrender.com");
-      socket.emit("admin is logged in","Admin"+Math.floor(Math.random()*1000000000));
-      socket.on("message sent from client to admin", ({message,user }) => {
+      const serverUrl = process.env.NODE_ENV === "production"
+        ? "https://server-x05s.onrender.com"
+        : "http://localhost:5000";
+
+      const socket = io(serverUrl);
+      socket.emit("admin is logged in", "Admin" + Math.floor(Math.random() * 1000000000));
+      socket.on("message sent from client to admin", ({ message, user }) => {
         dispatch(chatActions(user, message));
         dispatch(messageReceived(true));
         // let audio = new Audio("/audio/chat-msg.mp3");
         // audio.play();
       })
-      socket.on("disconnected",({reason,socketId})=>{
+      socket.on("disconnected", ({ reason, socketId }) => {
         dispatch(RemoveChatRooms(socketId));
       })
       return () => socket.disconnect();
@@ -107,9 +111,9 @@ export const HeaderComponent = () => {
               (Object.keys(userInfo).length !== 0) ? (
                 userInfo.isAdmin ? (
                   <>
-                  {
-                    messageReceivedFromClient?(<span className="position-absolute top-1 start-10 translate-end p-2 bg-danger border border-light rounded-circle"></span>):(null)
-                  }   
+                    {
+                      messageReceivedFromClient ? (<span className="position-absolute top-1 start-10 translate-end p-2 bg-danger border border-light rounded-circle"></span>) : (null)
+                    }
                     <NavDropdown title={`${userInfo.firstName + userInfo.lastName}`} id="collapsible-nav-dropdown">
                       <NavDropdown.Item eventKey="/admin/users" as={Link} to="/admin/users">Admin View</NavDropdown.Item>
                       <NavDropdown.Item eventKey="/user" as={Link} to="/user">My Profile</NavDropdown.Item>

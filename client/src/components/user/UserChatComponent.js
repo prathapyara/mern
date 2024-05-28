@@ -11,21 +11,25 @@ export const UserChatComponent = () => {
     const [socket, setSocket] = useState(null);
     const [mychat, setMyChat] = useState([]);
     const [messageReceived, setMessageRecived] = useState(false); //if new message come and if no reply has given then it will show red dot
-    const [reconnect,setReconnect]=useState(false)
-    const [reconnectingMsg,setReconnectingMsg]=useState("");
+    const [reconnect, setReconnect] = useState(false)
+    const [reconnectingMsg, setReconnectingMsg] = useState("");
 
 
     const { userInfo } = useSelector((state) => state.user);
-    const chatBodyRef=useRef();
+    const chatBodyRef = useRef();
 
     useEffect(() => {
 
         if (!userInfo.isAdmin) {
-            const newSocket = io("https://server-x05s.onrender.com");
+            const serverUrl = process.env.NODE_ENV === "production"
+                ? "https://server-x05s.onrender.com"
+                : "http://localhost:5000";
+
+            const newSocket = io(serverUrl);
             setSocket(newSocket);
             return () => newSocket.disconnect();
         }
-    }, [userInfo.isAdmin,reconnect]);
+    }, [userInfo.isAdmin, reconnect]);
 
     useEffect(() => {
         if (socket) {
@@ -37,10 +41,10 @@ export const UserChatComponent = () => {
                 setMessageRecived(true);
                 audio.play();
             });
-            socket.on("admin closed the chat",(msg)=>{
+            socket.on("admin closed the chat", (msg) => {
                 console.log(msg);
-                setMyChat((prev)=>{
-                    return [...prev,{admin:msg}]
+                setMyChat((prev) => {
+                    return [...prev, { admin: msg }]
                 })
 
                 setReconnectingMsg("reconnecting.....");
@@ -70,14 +74,14 @@ export const UserChatComponent = () => {
                     form.message1.value = "";
                 }, 50)
 
-                socket.on("no admin is logged in",(msg)=>{
-                    setMyChat((prev)=>{
-                        return [...prev,{client:msg}]
+                socket.on("no admin is logged in", (msg) => {
+                    setMyChat((prev) => {
+                        return [...prev, { client: msg }]
                     })
                 })
 
-                if(chatBodyRef.current){
-                    chatBodyRef.current.scrollTop=chatBodyRef.current.scrollHeight
+                if (chatBodyRef.current) {
+                    chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight
                 }
             }
         }
@@ -102,7 +106,7 @@ export const UserChatComponent = () => {
                 chat ? (
                     <>
                         <div className="chat-wrapper">
-                        <div>{reconnectingMsg}</div>
+                            <div>{reconnectingMsg}</div>
                             <div className="chat-header">
                                 <h6>
                                     Let's Chat - Online

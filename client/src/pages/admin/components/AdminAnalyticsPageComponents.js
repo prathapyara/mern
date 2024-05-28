@@ -15,55 +15,59 @@ export const AdminAnalyticsPageComponent = ({ getOrdersFirstDate, getOrdersSecon
     const [dataForTheSecondSet, setDataForTheSecondSet] = useState([]);
 
     useEffect(() => {
-        const socket = io('https://server-x05s.onrender.com');
+        const serverUrl = process.env.NODE_ENV === "production"
+            ? "https://server-x05s.onrender.com"
+            : "http://localhost:5000";
 
-        const today=new Date().toDateString();
-       
-        
-        const handler=(orderData)=>{
-            var orderDate=new Date(orderData.createdAt).toLocaleString("en-US",{
-                hour:"numeric",hour12:true,timeZone:"UTC"
+        const socket = io(serverUrl);
+
+        const today = new Date().toDateString();
+
+
+        const handler = (orderData) => {
+            var orderDate = new Date(orderData.createdAt).toLocaleString("en-US", {
+                hour: "numeric", hour12: true, timeZone: "UTC"
             })
-            
-            if(new Date(orderData.createdAt).toDateString()===today){
-                console.log(new Date(firstDateToCompare).toDateString(),today);
-                if(new Date(firstDateToCompare).toDateString()===today){
-                    
-                    setDataForTheFirstSet((prev)=>{
-                        if(prev.length<=0){
-                            return [{name:orderDate,[firstDateToCompare]:orderData.orderTotal.cartSubtotal}];
+
+            if (new Date(orderData.createdAt).toDateString() === today) {
+                console.log(new Date(firstDateToCompare).toDateString(), today);
+                if (new Date(firstDateToCompare).toDateString() === today) {
+
+                    setDataForTheFirstSet((prev) => {
+                        if (prev.length <= 0) {
+                            return [{ name: orderDate, [firstDateToCompare]: orderData.orderTotal.cartSubtotal }];
                         }
-                        const length=prev.length;
-                        if(prev[length-1].name===orderDate){
-                            
-                            prev[length-1][firstDateToCompare]+=orderData.orderTotal.cartSubtotal
+                        const length = prev.length;
+                        if (prev[length - 1].name === orderDate) {
+
+                            prev[length - 1][firstDateToCompare] += orderData.orderTotal.cartSubtotal
                             return [...prev];
-                        }else{
-                            return [...prev,{name:orderDate,[firstDateToCompare]:prev[length-1][firstDateToCompare]+orderData.orderTotal.cartSubtotal}]
-                        }
-                       
-                    })
-                }else if(today===new Date(secondDateToCompare).toDateString()){
-                    setDataForTheSecondSet((prev)=>{
-                        if(prev.length<=0){
-                            return [{name:orderDate,[secondDateToCompare]:orderData.orderTotal.cartSubtotal}];
+                        } else {
+                            return [...prev, { name: orderDate, [firstDateToCompare]: prev[length - 1][firstDateToCompare] + orderData.orderTotal.cartSubtotal }]
                         }
 
-                        const length=prev.length;
-                        if(prev[length-1].name===orderDate){
-                            prev[length-1][secondDateToCompare]+=orderData.orderTotal.cartSubtotal
+                    })
+                } else if (today === new Date(secondDateToCompare).toDateString()) {
+                    setDataForTheSecondSet((prev) => {
+                        if (prev.length <= 0) {
+                            return [{ name: orderDate, [secondDateToCompare]: orderData.orderTotal.cartSubtotal }];
+                        }
+
+                        const length = prev.length;
+                        if (prev[length - 1].name === orderDate) {
+                            prev[length - 1][secondDateToCompare] += orderData.orderTotal.cartSubtotal
                             return [...prev];
-                        }else{
-                            return [...prev,{name:orderDate,[secondDateToCompare]:prev[length-1][secondDateToCompare]+orderData.orderTotal.cartSubtotal}]
-                        }   
-                        
+                        } else {
+                            return [...prev, { name: orderDate, [secondDateToCompare]: prev[length - 1][secondDateToCompare] + orderData.orderTotal.cartSubtotal }]
+                        }
+
                     })
                 }
             }
         }
 
-        socket.on("sendOrderData",handler);
-        return ()=>socket.off("sendOrderData",handler);
+        socket.on("sendOrderData", handler);
+        return () => socket.off("sendOrderData", handler);
 
     }, [dataForTheFirstSet, dataForTheSecondSet, secondDateToCompare, firstDateToCompare])
 

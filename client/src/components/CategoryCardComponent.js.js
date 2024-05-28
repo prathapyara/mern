@@ -3,8 +3,6 @@ import Card from 'react-bootstrap/Card';
 import { LinkContainer } from 'react-router-bootstrap';
 
 function CategoryCardComponent({item,idx}) {
-    const itemurl=`https://source.unsplash.com/random/900×700/?${item.name}`
-    console.log(item.image);
   return (
     <Card>
       <Card.Img crossOrigin='anonymous' variant="top" src={item.image?item.image:null} style={{ "height": "250px", "object-fit": "cover" }} />
