@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const UserChatComponent = () => {
 
@@ -17,6 +18,7 @@ export const UserChatComponent = () => {
 
     const { userInfo } = useSelector((state) => state.user);
     const chatBodyRef = useRef();
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -44,12 +46,12 @@ export const UserChatComponent = () => {
             socket.on("admin closed the chat", (msg) => {
                 console.log(msg);
                 setMyChat((prev) => {
-                    return [...prev, { admin: msg }]
+                    return [{client:msg}]
                 })
 
                 setReconnectingMsg("reconnecting.....");
 
-                setInterval(() => {
+                setTimeout(() => {
                     setReconnect(true);
                     setReconnectingMsg("");
                     setMyChat([]);
@@ -63,27 +65,51 @@ export const UserChatComponent = () => {
         e.stopPropagation();
         const form = e.currentTarget.elements;
         const clientMessage = form.message1.value.trim();
+        console.log(Object.keys(userInfo).length);
         if (e.currentTarget.checkValidity() === true) {
-            if (socket && !userInfo.isAdmin) {
-                socket.emit("client side message", clientMessage);
+            if (Object.keys(userInfo).length === 0) {
                 setMyChat((prev) => {
-                    return [...prev, { client: clientMessage }];
-                });
-                setMessageRecived(false);
-                setTimeout(() => {
-                    form.message1.value = "";
-                }, 50)
-
-                socket.on("no admin is logged in", (msg) => {
-                    setMyChat((prev) => {
-                        return [...prev, { client: msg }]
-                    })
+                    return [...prev, { client: "first login then do chart" }]
                 })
 
-                if (chatBodyRef.current) {
-                    chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight
+                setTimeout(() => {
+                    navigate("/login");
+                    form.message1.value = "";
+                }, 50);
+
+                setTimeout(()=>{
+                    setMyChat([]);
+                },3000)
+
+            } else {
+
+                if (socket && !userInfo.isAdmin && userInfo) {
+                    socket.emit("client side message", clientMessage);
+                    setMyChat((prev) => {
+                        return [...prev, { client: clientMessage }];
+                    });
+                    setMessageRecived(false);
+                    setTimeout(() => {
+                        form.message1.value = "";
+                    }, 50)
+
+                    socket.on("no admin is logged in", (msg) => {
+                        setMyChat((prev) => {
+                            return [{ client: msg }]
+                        })
+
+                        setTimeout(()=>{
+                            setMyChat([]);
+                        },2000)
+                    })
+
+                    if (chatBodyRef.current) {
+                        chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight
+                    }
                 }
+
             }
+
         }
         setValidated(true);
     }

@@ -79,7 +79,7 @@ export const ProductsDetailsPageComponent = ({ fetchProduct, dispatch, addToCart
             }).catch((err) => {
                 if (err.response.data == "All inputs are required" || err.response.data == "product already reviewed") {
                     setError(err.response.data);
-                    setInterval(() => {
+                    setTimeout(() => {
                         setError("");
                     }, 5000)
                 }

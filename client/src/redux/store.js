@@ -33,7 +33,7 @@ const checkAndUpdateLocalStorage = () => {
     }
 }
 
-const localStorageUpdateInterval = setInterval(checkAndUpdateLocalStorage, 600000);
+const localStorageUpdateInterval = setInterval(checkAndUpdateLocalStorage, 36000000);
 
 checkAndUpdateLocalStorage();
 
