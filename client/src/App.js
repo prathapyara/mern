@@ -25,7 +25,7 @@ import { RouterWithUserChatComponent } from "./components/user/RouterWithUserCha
 import ScrollToTopOnReload from "./utils/ScrollToTopReload.js";
 import { LogoutPage } from "./pages/LogoutPage.js";
 import dotevn from "dotenv";
-do
+
 dotevn.config();
 
 function App() {
