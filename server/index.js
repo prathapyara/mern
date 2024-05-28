@@ -1,3 +1,4 @@
+import dotevn from "dotenv";
 import express from "express";
 import apiRoutes from "./routes/apiRoutes.js";
 import { MongoDB } from "./config/db.js";
@@ -9,6 +10,7 @@ import cors from "cors";
 //import {helmet} from "helmet";
 
 const app = express();
+dotevn.config();
 
 app.use(cors({
     origin: process.env.NODE_ENV === "production" ? "https://client-o608.onrender.com" : "http://localhost:3000", // Allow requests from this origin
