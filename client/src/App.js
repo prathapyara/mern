@@ -24,9 +24,6 @@ import { HeaderComponent } from "./components/HeaderComponent.js";
 import { RouterWithUserChatComponent } from "./components/user/RouterWithUserChatComponent.js";
 import ScrollToTopOnReload from "./utils/ScrollToTopReload.js";
 import { LogoutPage } from "./pages/LogoutPage.js";
-import dotevn from "dotenv";
-
-dotevn.config();
 
 function App() {
 
