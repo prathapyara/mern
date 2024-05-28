@@ -10,7 +10,7 @@ import { io } from 'socket.io-client';
 
 export const AdminChatPage = () => {
     const { chatRooms } = useSelector((state) => state.chatBetweenClientAdmin)
-    const socket=io("https://server-x05s.onrender.com");
+    const socket=io("http://localhost:5000");
     return (
         <>
             <Row className='m-5'>
