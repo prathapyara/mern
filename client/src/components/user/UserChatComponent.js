@@ -21,7 +21,7 @@ export const UserChatComponent = () => {
     useEffect(() => {
 
         if (!userInfo.isAdmin) {
-            const newSocket = io("http://localhost:5000");
+            const newSocket = io("https://server-x05s.onrender.com");
             setSocket(newSocket);
             return () => newSocket.disconnect();
         }

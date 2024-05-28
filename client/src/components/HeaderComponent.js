@@ -60,7 +60,7 @@ export const HeaderComponent = () => {
 
   useEffect(() => {
     if (userInfo.isAdmin) {
-      const socket = io("http://localhost:5000");
+      const socket = io("https://server-x05s.onrender.com");
       socket.emit("admin is logged in","Admin"+Math.floor(Math.random()*1000000000));
       socket.on("message sent from client to admin", ({message,user }) => {
         dispatch(chatActions(user, message));
